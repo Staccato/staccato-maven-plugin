@@ -4,8 +4,8 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 
-import com.ecovate.database.migration.Main;
-import com.ecovate.database.migration.MigrationException;
+import com.readytalk.staccato.database.migration.Main;
+import com.readytalk.staccato.database.migration.MigrationException;
 
 /**
  * Runs a migration

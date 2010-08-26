@@ -9,9 +9,9 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.joda.time.DateTime;
 
-import com.ecovate.database.migration.script.template.GroovyScriptTemplateService;
-import com.ecovate.database.migration.script.template.ScriptTemplate;
 import com.mysql.jdbc.StringUtils;
+import com.readytalk.staccato.database.migration.script.template.GroovyScriptTemplateService;
+import com.readytalk.staccato.database.migration.script.template.ScriptTemplate;
 
 /**
  * Goal that creates a groovy migration script from the template provided by the staccato project
