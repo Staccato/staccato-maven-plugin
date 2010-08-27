@@ -11,10 +11,9 @@ import org.joda.time.DateTime;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.mysql.jdbc.StringUtils;
 import com.readytalk.staccato.database.migration.guice.MigrationModule;
-import com.readytalk.staccato.database.migration.script.template.GroovyScriptTemplateService;
-import com.readytalk.staccato.database.migration.script.template.ScriptTemplate;
+import com.readytalk.staccato.database.migration.script.ScriptTemplate;
+import com.readytalk.staccato.database.migration.script.groovy.GroovyScriptService;
 
 /**
  * Goal that creates a groovy migration script from the template provided by the staccato project
@@ -53,23 +52,23 @@ public class CreateScript extends AbstractMojo {
   public void execute() throws MojoExecutionException {
 
     injector.injectMembers(this);
-    GroovyScriptTemplateService templateService = injector.getInstance(GroovyScriptTemplateService.class);
+    GroovyScriptService scriptService = injector.getInstance(GroovyScriptService.class);
 
     DateTime date = new DateTime();
     try {
       String user = System.getenv("USER");
-      ScriptTemplate template = templateService.loadTemplate(date, user, project.getVersion());
+      ScriptTemplate template = scriptService.getScriptTemplate(date, user, project.getVersion());
 
-      String filenameToUse = template.getFilename();
-      if (!StringUtils.isNullOrEmpty(filename)) {
-        filenameToUse = filename + ".groovy";
+      String filenameToUse = template.getClassname() + "." + scriptService.getScriptFileExtension();
+      if (filename != null && !filename.equals("")) {
+        filenameToUse = filename + "." + scriptService.getScriptFileExtension();
       }
 
       migrationFile = new File(migrationsDir, filenameToUse);
 
-      String templateContents = template.getTemplateContents();
+      String templateContents = template.getContents();
 
-      if (!StringUtils.isNullOrEmpty(filename)) {
+      if (filename != null && !filename.equals("")) {
         templateContents = templateContents.replace(template.getClassname(), filename);
       }
 
