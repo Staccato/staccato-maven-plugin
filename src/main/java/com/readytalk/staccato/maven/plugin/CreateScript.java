@@ -9,7 +9,10 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.joda.time.DateTime;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import com.mysql.jdbc.StringUtils;
+import com.readytalk.staccato.database.migration.guice.MigrationModule;
 import com.readytalk.staccato.database.migration.script.template.GroovyScriptTemplateService;
 import com.readytalk.staccato.database.migration.script.template.ScriptTemplate;
 
@@ -19,6 +22,8 @@ import com.readytalk.staccato.database.migration.script.template.ScriptTemplate;
  * @goal create-script
  */
 public class CreateScript extends AbstractMojo {
+
+  Injector injector = Guice.createInjector(new MigrationModule());
 
   /**
    * The migrations directory
@@ -47,7 +52,8 @@ public class CreateScript extends AbstractMojo {
 
   public void execute() throws MojoExecutionException {
 
-    GroovyScriptTemplateService templateService = new GroovyScriptTemplateService();
+    injector.injectMembers(this);
+    GroovyScriptTemplateService templateService = injector.getInstance(GroovyScriptTemplateService.class);
 
     DateTime date = new DateTime();
     try {

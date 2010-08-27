@@ -15,10 +15,10 @@ public class CreateDatabaseTest {
 
     String projectName = "staccato-plugin";
     String projectVersion = "1.0";
-    String dbName = "database_manager_test";
+    String dbName = "staccato";
     String jdbcUrl = "jdbc:postgresql://localhost:5432/" + dbName;
-    String dbUsername = "database_manager";
-    String dbPassword = "database_manager";
+    String dbUsername = "staccato";
+    String dbPassword = "staccato";
     String dbType = "SCHEMA_UP";
 
     CreateDatabase plugin = new CreateDatabase();
