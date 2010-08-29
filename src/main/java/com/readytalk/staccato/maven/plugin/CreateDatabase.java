@@ -4,7 +4,7 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 
-import com.readytalk.staccato.database.migration.Main;
+import com.readytalk.staccato.Main;
 import com.readytalk.staccato.database.migration.MigrationException;
 
 /**
