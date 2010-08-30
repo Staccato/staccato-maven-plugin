@@ -14,7 +14,7 @@ import com.readytalk.staccato.database.migration.MigrationException;
 
 /**
  * @author jhumphrey
- * @goal create-database
+ * @goal migrate
  */
 public class Migrate extends AbstractMojo {
 
