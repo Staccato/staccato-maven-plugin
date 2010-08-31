@@ -19,7 +19,6 @@ public class CreateDatabaseTest {
     String jdbcUrl = "jdbc:postgresql://localhost:5432/" + dbName;
     String dbUsername = "staccato";
     String dbPassword = "staccato";
-    String dbType = "SCHEMA_UP";
 
     CreateDatabase plugin = new CreateDatabase();
 
@@ -33,7 +32,6 @@ public class CreateDatabaseTest {
     plugin.setDbName(dbName);
     plugin.setDbUsername(dbUsername);
     plugin.setDbPassword(dbPassword);
-    plugin.setMigrationType(dbType);
 
     plugin.execute();
 

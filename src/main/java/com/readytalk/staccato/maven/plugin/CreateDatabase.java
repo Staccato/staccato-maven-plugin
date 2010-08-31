@@ -6,6 +6,7 @@ import org.apache.maven.project.MavenProject;
 
 import com.readytalk.staccato.Main;
 import com.readytalk.staccato.database.migration.MigrationException;
+import com.readytalk.staccato.database.migration.MigrationType;
 
 /**
  * Runs a migration
@@ -14,14 +15,6 @@ import com.readytalk.staccato.database.migration.MigrationException;
  * @requiresDependencyResolution compile
  */
 public class CreateDatabase extends AbstractMojo {
-
-  /**
-   * The Migrations Type.
-   *
-   * @parameter expression="${migrationType}"
-   * @required
-   */
-  private String migrationType;
 
   /**
    * The jdbc url
@@ -66,18 +59,10 @@ public class CreateDatabase extends AbstractMojo {
   public void execute() throws MojoExecutionException {
 
     try {
-      Main.main("-jdbc", jdbcUrl, "-dbn", dbName, "-dbu", dbUsername, "-dbp", dbPassword, "-pn", project.getName(), "-pv", project.getVersion(), "-m", migrationType);
+      Main.main("-jdbc", jdbcUrl, "-dbn", dbName, "-dbu", dbUsername, "-dbp", dbPassword, "-pn", project.getName(), "-pv", project.getVersion(), "-m", MigrationType.UP.name());
     } catch (MigrationException e) {
       throw new MojoExecutionException(e.getMessage(), e);
     }
-  }
-
-  public String getMigrationType() {
-    return migrationType;
-  }
-
-  public void setMigrationType(String migrationType) {
-    this.migrationType = migrationType;
   }
 
   public MavenProject getProject() {
