@@ -18,7 +18,7 @@ public class MigrationTest {
     String projectName = "staccato-plugin";
     String projectVersion = "1.0";
     String dbName = "staccato";
-    String jdbcUrl = "jdbc:postgresql://localhost:5432/" + dbName;
+    String jdbcUrl = "jdbc:postgresql://localhost:5432/";
     String dbUsername = "staccato";
     String dbPassword = "staccato";
     String dbType = "SCHEMA_UP";
@@ -47,7 +47,7 @@ public class MigrationTest {
     String projectName = "staccato-plugin";
     String projectVersion = "1.0";
     String dbName = "staccato";
-    String jdbcUrl = "jdbc:postgresql://localhost:5432/" + dbName;
+    String jdbcUrl = "jdbc:postgresql://localhost:5432";
     String dbUsername = "staccato";
     String dbPassword = "staccato";
     String dbType = "SCHEMA_UP";
