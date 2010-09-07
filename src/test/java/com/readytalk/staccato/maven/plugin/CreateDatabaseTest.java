@@ -19,10 +19,13 @@ public class CreateDatabaseTest {
     String jdbcUrl = "jdbc:postgresql://localhost:5432/";
     String dbUsername = "staccato";
     String dbPassword = "staccato";
+    String rootDbName = "staccato_root";
 
     CreateDatabase plugin = new CreateDatabase();
 
     MavenProject project = EasyMock.createStrictMock(MavenProject.class);
+    EasyMock.expect(project.getName()).andReturn(projectName);
+    EasyMock.expect(project.getVersion()).andReturn(projectVersion);
     EasyMock.expect(project.getName()).andReturn(projectName);
     EasyMock.expect(project.getVersion()).andReturn(projectVersion);
     EasyMock.replay(project);
@@ -32,6 +35,9 @@ public class CreateDatabaseTest {
     plugin.setDbName(dbName);
     plugin.setDbUsername(dbUsername);
     plugin.setDbPassword(dbPassword);
+    plugin.setRootDbName(rootDbName);
+    plugin.setRootDbUsername(dbUsername);
+    plugin.setRootDbPassword(dbPassword);
 
     plugin.execute();
 

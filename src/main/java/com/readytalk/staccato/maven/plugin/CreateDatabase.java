@@ -49,6 +49,30 @@ public class CreateDatabase extends AbstractMojo {
   private String dbPassword;
 
   /**
+   * The root db name
+   *
+   * @parameter expression="${rootDbName}"
+   * @required
+   */
+  private String rootDbName;
+
+  /**
+   * The root database username
+   *
+   * @parameter expression="${rootDbUsername}"
+   * @required
+   */
+  private String rootDbUsername;
+
+  /**
+   * The root database password
+   *
+   * @parameter expression="${rootDbPassword}"
+   * @required
+   */
+  private String rootDbPassword;
+
+  /**
    * The maven project.
    *
    * @parameter expression="${project}"
@@ -57,6 +81,13 @@ public class CreateDatabase extends AbstractMojo {
   private MavenProject project;
 
   public void execute() throws MojoExecutionException {
+
+    try {
+      Main.main("-jdbc", jdbcUrl, "-dbn", dbName, "-dbu", dbUsername, "-dbp", dbPassword, "-pn", project.getName(), "-pv", project.getVersion(),
+        "-m", MigrationType.CREATE.name(), "-rdbn", rootDbName, "-rdbu", rootDbUsername, "-rdbp", rootDbPassword);
+    } catch (MigrationException e) {
+      throw new MojoExecutionException(e.getMessage(), e);
+    }
 
     try {
       Main.main("-jdbc", jdbcUrl, "-dbn", dbName, "-dbu", dbUsername, "-dbp", dbPassword, "-pn", project.getName(), "-pv", project.getVersion(), "-m", MigrationType.UP.name());
@@ -103,5 +134,29 @@ public class CreateDatabase extends AbstractMojo {
 
   public void setJdbcUrl(String jdbcUrl) {
     this.jdbcUrl = jdbcUrl;
+  }
+
+  public String getRootDbName() {
+    return rootDbName;
+  }
+
+  public void setRootDbName(String rootDbName) {
+    this.rootDbName = rootDbName;
+  }
+
+  public String getRootDbPassword() {
+    return rootDbPassword;
+  }
+
+  public void setRootDbPassword(String rootDbPassword) {
+    this.rootDbPassword = rootDbPassword;
+  }
+
+  public String getRootDbUsername() {
+    return rootDbUsername;
+  }
+
+  public void setRootDbUsername(String rootDbUsername) {
+    this.rootDbUsername = rootDbUsername;
   }
 }
