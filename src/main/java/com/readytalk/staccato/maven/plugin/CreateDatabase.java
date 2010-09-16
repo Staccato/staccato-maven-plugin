@@ -4,9 +4,15 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.mysql.jdbc.StringUtils;
 import com.readytalk.staccato.Main;
+import com.readytalk.staccato.Staccato;
+import com.readytalk.staccato.StaccatoOptions;
 import com.readytalk.staccato.database.migration.MigrationException;
 import com.readytalk.staccato.database.migration.MigrationType;
+import com.readytalk.staccato.database.migration.guice.MigrationModule;
 
 /**
  * Runs a migration
@@ -35,42 +41,40 @@ public class CreateDatabase extends AbstractMojo {
   /**
    * The database username
    *
-   * @parameter expression="${dbUsername}"
+   * @parameter expression="${dbUser}"
    * @required
    */
-  private String dbUsername;
+  private String dbUser;
 
   /**
    * The database password
    *
-   * @parameter expression="${dbPassword}"
+   * @parameter expression="${dbPwd}"
    * @required
    */
-  private String dbPassword;
+  private String dbPwd;
 
   /**
    * The root db name
    *
-   * @parameter expression="${rootDbName}"
-   * @required
+   * @parameter expression="${rootDb}"
    */
-  private String rootDbName;
+  private String rootDb;
 
   /**
    * The root database username
    *
-   * @parameter expression="${rootDbUsername}"
-   * @required
+   * @parameter expression="${superUser}"
    */
-  private String rootDbUsername;
+  private String superUser;
 
   /**
    * The root database password
    *
-   * @parameter expression="${rootDbPassword}"
+   * @parameter expression="${superUserPwd}"
    * @required
    */
-  private String rootDbPassword;
+  private String superUserPwd;
 
   /**
    * The maven project.
@@ -82,15 +86,36 @@ public class CreateDatabase extends AbstractMojo {
 
   public void execute() throws MojoExecutionException {
 
+    Injector injector = Guice.createInjector(new MigrationModule());
+
+    StaccatoOptions options = new StaccatoOptions();
+    options.jdbcUrl = jdbcUrl;
+    options.dbName = dbName;
+    options.dbUser = dbUser;
+    options.dbPwd = dbPwd;
+    options.migrationType = MigrationType.CREATE.name();
+    options.dbSuperUserPwd = superUserPwd;
+
+    if (!StringUtils.isNullOrEmpty(superUser)) {
+      options.dbSuperUser = superUser;
+    }
+
+    if (!StringUtils.isNullOrEmpty(rootDb)) {
+      options.rootDb = rootDb;
+    }
+
     try {
-      Main.main("-jdbc", jdbcUrl, "-dbn", dbName, "-dbu", dbUsername, "-dbp", dbPassword, "-pn", project.getName(), "-pv", project.getVersion(),
-        "-m", MigrationType.CREATE.name(), "-rdbn", rootDbName, "-rdbu", rootDbUsername, "-rdbp", rootDbPassword);
+      Staccato staccato = injector.getInstance(Staccato.class);
+      staccato.execute(options);
     } catch (MigrationException e) {
       throw new MojoExecutionException(e.getMessage(), e);
     }
 
+    options.migrationType = MigrationType.UP.name();
+
     try {
-      Main.main("-jdbc", jdbcUrl, "-dbn", dbName, "-dbu", dbUsername, "-dbp", dbPassword, "-pn", project.getName(), "-pv", project.getVersion(), "-m", MigrationType.UP.name());
+      Staccato staccato = injector.getInstance(Staccato.class);
+      staccato.execute(options);
     } catch (MigrationException e) {
       throw new MojoExecutionException(e.getMessage(), e);
     }
@@ -104,20 +129,20 @@ public class CreateDatabase extends AbstractMojo {
     this.project = project;
   }
 
-  public String getDbPassword() {
-    return dbPassword;
+  public String getDbPwd() {
+    return dbPwd;
   }
 
-  public void setDbPassword(String dbPassword) {
-    this.dbPassword = dbPassword;
+  public void setDbPwd(String dbPwd) {
+    this.dbPwd = dbPwd;
   }
 
-  public String getDbUsername() {
-    return dbUsername;
+  public String getDbUser() {
+    return dbUser;
   }
 
-  public void setDbUsername(String dbUsername) {
-    this.dbUsername = dbUsername;
+  public void setDbUser(String dbUser) {
+    this.dbUser = dbUser;
   }
 
   public String getJdbcUrl() {
@@ -136,27 +161,27 @@ public class CreateDatabase extends AbstractMojo {
     this.jdbcUrl = jdbcUrl;
   }
 
-  public String getRootDbName() {
-    return rootDbName;
+  public String getRootDb() {
+    return rootDb;
   }
 
-  public void setRootDbName(String rootDbName) {
-    this.rootDbName = rootDbName;
+  public void setRootDb(String rootDb) {
+    this.rootDb = rootDb;
   }
 
-  public String getRootDbPassword() {
-    return rootDbPassword;
+  public String getSuperUserPwd() {
+    return superUserPwd;
   }
 
-  public void setRootDbPassword(String rootDbPassword) {
-    this.rootDbPassword = rootDbPassword;
+  public void setSuperUserPwd(String superUserPwd) {
+    this.superUserPwd = superUserPwd;
   }
 
-  public String getRootDbUsername() {
-    return rootDbUsername;
+  public String getSuperUser() {
+    return superUser;
   }
 
-  public void setRootDbUsername(String rootDbUsername) {
-    this.rootDbUsername = rootDbUsername;
+  public void setSuperUser(String superUser) {
+    this.superUser = superUser;
   }
 }

@@ -18,13 +18,12 @@ public class CreateScriptTest {
   public void testExecute() throws MojoExecutionException, IOException {
 
     String migrationsDir = "target";
-    String projectVersion = "1.0";
 
     CreateScript plugin = new CreateScript();
     plugin.setMigrationsDir(migrationsDir);
 
     MavenProject project = EasyMock.createStrictMock(MavenProject.class);
-    EasyMock.expect(project.getVersion()).andReturn(projectVersion);
+    EasyMock.expect(project.getVersion()).andReturn("1.0");
     EasyMock.replay(project);
 
     plugin.setProject(project);

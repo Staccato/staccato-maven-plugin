@@ -1,16 +1,15 @@
 package com.readytalk.staccato.maven.plugin;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.project.MavenProject;
 
-import com.readytalk.staccato.Main;
-import com.readytalk.staccato.database.migration.MigrationException;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.readytalk.staccato.Staccato;
+import com.readytalk.staccato.StaccatoOptions;
+import com.readytalk.staccato.database.migration.guice.MigrationModule;
 
 /**
  * @author jhumphrey
@@ -45,18 +44,18 @@ public class Migration extends AbstractMojo {
   /**
    * The database username
    *
-   * @parameter expression="${dbUsername}"
+   * @parameter expression="${dbUser}"
    * @required
    */
-  private String dbUsername;
+  private String dbUser;
 
   /**
    * The database password
    *
-   * @parameter expression="${dbPassword}"
+   * @parameter expression="${dbPwd}"
    * @required
    */
-  private String dbPassword;
+  private String dbPwd;
 
   /**
    * The database password
@@ -79,61 +78,34 @@ public class Migration extends AbstractMojo {
    */
   private String migrateToDate;
 
-  /**
-   * The maven project.
-   *
-   * @parameter expression="${project}"
-   * @readonly
-   */
-  private MavenProject project;
-
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
 
-    List<String> argList = new ArrayList<String>();
-    argList.add("-jdbc");
-    argList.add(jdbcUrl);
-    argList.add("-dbn");
-    argList.add(dbName);
-    argList.add("-dbu");
-    argList.add(dbUsername);
-    argList.add("-dbp");
-    argList.add(dbPassword);
-    argList.add("-pn");
-    argList.add(project.getName());
-    argList.add("-pv");
-    argList.add(project.getVersion());
-    argList.add("-m");
-    argList.add(migrationType);
+    Injector injector = Guice.createInjector(new MigrationModule());
+
+    StaccatoOptions options = new StaccatoOptions();
+    options.jdbcUrl = jdbcUrl;
+    options.dbName = dbName;
+    options.dbUser = dbUser;
+    options.dbPwd = dbPwd;
+    options.migrationType = migrationType;
 
     if (!StringUtils.isEmpty(migrateScript) && !StringUtils.isEmpty(migrateFromDate)) {
       throw new MojoExecutionException("Either migrateScript or migrateFromDate should be specified, not both");
     } else if (!StringUtils.isEmpty(migrateScript)) {
-        argList.add("-ms");
-        argList.add(migrateScript);
+      options.migrateScript = migrateScript;
     } else {
       if (!StringUtils.isEmpty(migrateFromDate)) {
-        argList.add("-mfd");
-        argList.add(migrateFromDate);
+        options.migrateFromDate = migrateFromDate;
       }
 
       if (!StringUtils.isEmpty(migrateToDate)) {
-        argList.add("-mtd");
-        argList.add(migrateToDate);
+        options.migrateToDate = migrateToDate;
       }
     }
 
-    String[] args = new String[argList.size()];
-    for (int i = 0; i < args.length; i++) {
-      args[i] = argList.get(i);
-
-    }
-
-    try {
-      Main.main(args);
-    } catch (MigrationException e) {
-      throw new MojoExecutionException(e.getMessage(), e);
-    }
+    Staccato staccato = injector.getInstance(Staccato.class);
+    staccato.execute(options);
   }
 
   public String getDbName() {
@@ -144,20 +116,20 @@ public class Migration extends AbstractMojo {
     this.dbName = dbName;
   }
 
-  public String getDbPassword() {
-    return dbPassword;
+  public String getDbPwd() {
+    return dbPwd;
   }
 
-  public void setDbPassword(String dbPassword) {
-    this.dbPassword = dbPassword;
+  public void setDbPwd(String dbPwd) {
+    this.dbPwd = dbPwd;
   }
 
-  public String getDbUsername() {
-    return dbUsername;
+  public String getDbUser() {
+    return dbUser;
   }
 
-  public void setDbUsername(String dbUsername) {
-    this.dbUsername = dbUsername;
+  public void setDbUser(String dbUser) {
+    this.dbUser = dbUser;
   }
 
   public String getJdbcUrl() {
@@ -174,14 +146,6 @@ public class Migration extends AbstractMojo {
 
   public void setMigrationType(String migrationType) {
     this.migrationType = migrationType;
-  }
-
-  public MavenProject getProject() {
-    return project;
-  }
-
-  public void setProject(MavenProject project) {
-    this.project = project;
   }
 
   public String getMigrateFromDate() {

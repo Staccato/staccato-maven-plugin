@@ -22,8 +22,6 @@ import com.readytalk.staccato.database.migration.script.groovy.GroovyScriptServi
  */
 public class CreateScript extends AbstractMojo {
 
-  Injector injector = Guice.createInjector(new MigrationModule());
-
   /**
    * The migrations directory
    *
@@ -51,7 +49,7 @@ public class CreateScript extends AbstractMojo {
 
   public void execute() throws MojoExecutionException {
 
-    injector.injectMembers(this);
+    Injector injector = Guice.createInjector(new MigrationModule());
     GroovyScriptService scriptService = injector.getInstance(GroovyScriptService.class);
 
     DateTime date = new DateTime();
