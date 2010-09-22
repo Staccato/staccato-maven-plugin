@@ -62,21 +62,21 @@ public class Migration extends AbstractMojo {
    *
    * @parameter expression="${migrateScript}"
    */
-  private String migrateScript;
+  private String script;
 
   /**
    * The database password
    *
    * @parameter expression="${migrateFromDate}"
    */
-  private String migrateFromDate;
+  private String fromDate;
 
   /**
    * The database password
    *
    * @parameter expression="${migrateToDate}"
    */
-  private String migrateToDate;
+  private String toDate;
 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
@@ -90,17 +90,17 @@ public class Migration extends AbstractMojo {
     options.dbPwd = dbPwd;
     options.migrationType = migrationType;
 
-    if (!StringUtils.isEmpty(migrateScript) && !StringUtils.isEmpty(migrateFromDate)) {
+    if (!StringUtils.isEmpty(script) && !StringUtils.isEmpty(fromDate)) {
       throw new MojoExecutionException("Either migrateScript or migrateFromDate should be specified, not both");
-    } else if (!StringUtils.isEmpty(migrateScript)) {
-      options.migrateScript = migrateScript;
+    } else if (!StringUtils.isEmpty(script)) {
+      options.migrateScript = script;
     } else {
-      if (!StringUtils.isEmpty(migrateFromDate)) {
-        options.migrateFromDate = migrateFromDate;
+      if (!StringUtils.isEmpty(fromDate)) {
+        options.migrateFromDate = fromDate;
       }
 
-      if (!StringUtils.isEmpty(migrateToDate)) {
-        options.migrateToDate = migrateToDate;
+      if (!StringUtils.isEmpty(toDate)) {
+        options.migrateToDate = toDate;
       }
     }
 
@@ -148,27 +148,27 @@ public class Migration extends AbstractMojo {
     this.migrationType = migrationType;
   }
 
-  public String getMigrateFromDate() {
-    return migrateFromDate;
+  public String getFromDate() {
+    return fromDate;
   }
 
-  public void setMigrateFromDate(String migrateFromDate) {
-    this.migrateFromDate = migrateFromDate;
+  public void setFromDate(String fromDate) {
+    this.fromDate = fromDate;
   }
 
-  public String getMigrateScript() {
-    return migrateScript;
+  public String getScript() {
+    return script;
   }
 
-  public void setMigrateScript(String migrateScript) {
-    this.migrateScript = migrateScript;
+  public void setScript(String script) {
+    this.script = script;
   }
 
-  public String getMigrateToDate() {
-    return migrateToDate;
+  public String getToDate() {
+    return toDate;
   }
 
-  public void setMigrateToDate(String migrateToDate) {
-    this.migrateToDate = migrateToDate;
+  public void setToDate(String toDate) {
+    this.toDate = toDate;
   }
 }

@@ -48,8 +48,8 @@ public class MigrationTest {
     plugin.setDbUser(dbUsername);
     plugin.setDbPwd(dbPassword);
     plugin.setMigrationType(dbType);
-    plugin.setMigrateFromDate(migrateFromDate);
-    plugin.setMigrateScript(migrateScript);
+    plugin.setFromDate(migrateFromDate);
+    plugin.setScript(migrateScript);
 
     try {
       plugin.execute();
