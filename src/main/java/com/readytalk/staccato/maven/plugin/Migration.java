@@ -67,16 +67,29 @@ public class Migration extends AbstractMojo {
   /**
    * The database password
    *
-   * @parameter expression="${migrateFromDate}"
+   * @parameter expression="${fromDate}"
    */
   private String fromDate;
 
   /**
    * The database password
    *
-   * @parameter expression="${migrateToDate}"
+   * @parameter expression="${toDate}"
    */
   private String toDate;
+  /**
+   * The database password
+   *
+   * @parameter expression="${fromVersion}"
+   */
+  private String fromVersion;
+
+  /**
+   * The database password
+   *
+   * @parameter expression="${toVersion}"
+   */
+  private String toVersion;
 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
@@ -89,20 +102,11 @@ public class Migration extends AbstractMojo {
     options.dbUser = dbUser;
     options.dbPwd = dbPwd;
     options.migrationType = migrationType;
-
-    if (!StringUtils.isEmpty(script) && !StringUtils.isEmpty(fromDate)) {
-      throw new MojoExecutionException("Either migrateScript or migrateFromDate should be specified, not both");
-    } else if (!StringUtils.isEmpty(script)) {
-      options.migrateScript = script;
-    } else {
-      if (!StringUtils.isEmpty(fromDate)) {
-        options.migrateFromDate = fromDate;
-      }
-
-      if (!StringUtils.isEmpty(toDate)) {
-        options.migrateToDate = toDate;
-      }
-    }
+    options.migrateScript = script;
+    options.migrateFromDate = fromDate;
+    options.migrateToDate = toDate;
+    options.migrateFromVer = fromVersion;
+    options.migrateToVer = toVersion;
 
     Staccato staccato = injector.getInstance(Staccato.class);
     staccato.execute(options);
@@ -170,5 +174,21 @@ public class Migration extends AbstractMojo {
 
   public void setToDate(String toDate) {
     this.toDate = toDate;
+  }
+
+  public String getFromVersion() {
+    return fromVersion;
+  }
+
+  public void setFromVersion(String fromVersion) {
+    this.fromVersion = fromVersion;
+  }
+
+  public String getToVersion() {
+    return toVersion;
+  }
+
+  public void setToVersion(String toVersion) {
+    this.toVersion = toVersion;
   }
 }
