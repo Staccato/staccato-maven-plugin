@@ -26,6 +26,13 @@ public class Migration extends AbstractMojo {
   private String migrationType;
 
   /**
+   * The super user pwd.
+   *
+   * @parameter expression="${superUserPwd}"
+   */
+  private String superUserPwd;
+
+  /**
    * The jdbc url
    *
    * @parameter expression="${jdbcUrl}"
@@ -107,6 +114,7 @@ public class Migration extends AbstractMojo {
     options.migrateToDate = toDate;
     options.migrateFromVer = fromVersion;
     options.migrateToVer = toVersion;
+    options.dbSuperUserPwd = superUserPwd;
 
     Staccato staccato = injector.getInstance(Staccato.class);
     staccato.execute(options);
