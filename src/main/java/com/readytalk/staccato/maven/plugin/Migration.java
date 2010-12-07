@@ -199,4 +199,12 @@ public class Migration extends AbstractMojo {
   public void setToVersion(String toVersion) {
     this.toVersion = toVersion;
   }
+
+  public String getSuperUserPwd() {
+    return superUserPwd;
+  }
+
+  public void setSuperUserPwd(String superUserPwd) {
+    this.superUserPwd = superUserPwd;
+  }
 }

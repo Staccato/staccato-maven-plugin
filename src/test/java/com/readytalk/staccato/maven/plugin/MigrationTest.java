@@ -10,7 +10,7 @@ import org.testng.annotations.Test;
 public class MigrationTest {
 
   @Test
-  public void testBasicExecute() throws MojoExecutionException, MojoFailureException {
+  public void testExecuteWithSchemaUp() throws MojoExecutionException, MojoFailureException {
 
     String dbName = "staccato";
     String jdbcUrl = "jdbc:postgresql://localhost:5432/";
@@ -25,6 +25,28 @@ public class MigrationTest {
     plugin.setDbUser(dbUsername);
     plugin.setDbPwd(dbPassword);
     plugin.setMigrationType(dbType);
+
+    plugin.execute();
+  }
+
+  @Test
+  public void testExecuteWithCreate() throws MojoExecutionException, MojoFailureException {
+
+    String dbName = "staccato";
+    String jdbcUrl = "jdbc:postgresql://localhost:5432/";
+    String dbUsername = "staccato";
+    String dbPassword = "staccato";
+    String dbType = "CREATE";
+    String dbSuperUserPwd = "staccato";
+
+    Migration plugin = new Migration();
+
+    plugin.setJdbcUrl(jdbcUrl);
+    plugin.setDbName(dbName);
+    plugin.setDbUser(dbUsername);
+    plugin.setDbPwd(dbPassword);
+    plugin.setMigrationType(dbType);
+    plugin.setSuperUserPwd(dbSuperUserPwd);
 
     plugin.execute();
   }
