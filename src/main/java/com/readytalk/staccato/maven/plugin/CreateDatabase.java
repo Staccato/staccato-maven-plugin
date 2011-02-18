@@ -77,6 +77,13 @@ public class CreateDatabase extends AbstractMojo {
   private String superUserPwd;
 
   /**
+   * true if logging enabled, false otherwise
+   *
+   * @parameter expression="${loggingEnabled}"
+   */
+  private Boolean loggingEnabled = true;
+
+  /**
    * The maven project.
    *
    * @parameter expression="${project}"
@@ -95,6 +102,7 @@ public class CreateDatabase extends AbstractMojo {
     options.dbPwd = dbPwd;
     options.migrationType = MigrationType.CREATE.name();
     options.dbSuperUserPwd = superUserPwd;
+    options.enableLogging = loggingEnabled;
 
     if (!StringUtils.isNullOrEmpty(superUser)) {
       options.dbSuperUser = superUser;
@@ -183,5 +191,13 @@ public class CreateDatabase extends AbstractMojo {
 
   public void setSuperUser(String superUser) {
     this.superUser = superUser;
+  }
+
+  public Boolean getLoggingEnabled() {
+    return loggingEnabled;
+  }
+
+  public void setLoggingEnabled(Boolean loggingEnabled) {
+    this.loggingEnabled = loggingEnabled;
   }
 }

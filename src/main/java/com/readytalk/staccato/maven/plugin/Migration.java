@@ -1,6 +1,5 @@
 package com.readytalk.staccato.maven.plugin;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -98,6 +97,13 @@ public class Migration extends AbstractMojo {
    */
   private String toVersion;
 
+  /**
+   * true if logging enabled, false otherwise
+   *
+   * @parameter expression="${loggingEnabled}"
+   */
+  private Boolean loggingEnabled = true;
+
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
 
@@ -115,6 +121,7 @@ public class Migration extends AbstractMojo {
     options.migrateFromVer = fromVersion;
     options.migrateToVer = toVersion;
     options.dbSuperUserPwd = superUserPwd;
+    options.enableLogging = loggingEnabled;
 
     Staccato staccato = injector.getInstance(Staccato.class);
     staccato.execute(options);
@@ -206,5 +213,13 @@ public class Migration extends AbstractMojo {
 
   public void setSuperUserPwd(String superUserPwd) {
     this.superUserPwd = superUserPwd;
+  }
+
+  public Boolean getLoggingEnabled() {
+    return loggingEnabled;
+  }
+
+  public void setLoggingEnabled(Boolean loggingEnabled) {
+    this.loggingEnabled = loggingEnabled;
   }
 }
